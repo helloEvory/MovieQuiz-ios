@@ -7,7 +7,7 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet weak private var textLabel: UILabel!
     
     private var currentQuestionIndex: Int = 0
-    var currentQuestion: QuizQuestion {questions[currentQuestionIndex]}
+    private var currentQuestion: QuizQuestion {questions[currentQuestionIndex]}
     
     private var correctAnswers: Int = 0
     
