@@ -115,21 +115,21 @@ final class MovieQuizViewController: UIViewController {
             preferredStyle: .alert) // preferredStyle может быть .alert или .actionSheet
         
         // создаём для него кнопки с действиями ("Сыграть ещё раз")
-        let action = UIAlertAction(
-            title: result.buttonText,
-            style: .default,
-            handler: { _ in
-                // вот этот код с переключением индекса и показом первого вопроса надо будет написать тут
-                self.currentQuestionIndex = 0
-                
-                // скидываем счётчик правильных ответов
-                self.correctAnswers = 0
-                
-                // заново показываем первый вопрос
-                let firstQuestion = self.questions[self.currentQuestionIndex]
-                let viewModel = self.convert(model: firstQuestion)
-                self.show(quiz: viewModel)
-            })
+        let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            
+            self.currentQuestionIndex = 0
+            self.correctAnswers = 0
+            
+            let firstQuestion = self.questions[self.currentQuestionIndex]
+            let viewModel = self.convert(model: firstQuestion)
+            self.show(quiz: viewModel)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self = self else { return }
+            self.showNextQuestionOrResults()
+        }
         
         
         // добавляем в алерт кнопки
