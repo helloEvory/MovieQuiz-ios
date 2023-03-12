@@ -120,6 +120,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                         Средняя точность: \(String(format: "%.2f", statisticService!.totalAccuracy))%
                         """,
                 buttonText: "Сыграть ещё раз") {
+                    [weak self] in
+                    guard let self = self else {return}
                     self.currentQuestionIndex = 0
                     self.correctAnswers = 0
                     self.questionFactory?.requestNextQuestion()
