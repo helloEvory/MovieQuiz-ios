@@ -9,18 +9,22 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet weak private var noButton: UIButton!
     @IBOutlet weak private var yesButton: UIButton!
     
-    @IBOutlet private var activityIndicator: UIActivityIndicatorView!
-
+    @IBOutlet weak private var activityIndicator: UIActivityIndicatorView!
+    
     private var currentQuestionIndex: Int = 0
     private var correctAnswers: Int = 0
     
     private let questionsAmount: Int = 10
     private var currentQuestion: QuizQuestion?
-    private var questionFactory: QuestionFactoryProtocol? = nil
+    private var questionFactory: QuestionFactory? = nil
     
-    private var alertPresenter: AlertPresenterProtocol? = nil
+    private var alertPresenter: AlertPresenter? = nil
     
     private var statisticService: StatisticService?
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +32,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         questionFactory?.loadData()
         showLoadingIndicator()
-        alertPresenter = AlertPresenter(alertController: self)
+      
+        alertPresenter = AlertPresenter(alertPresenterDelegate: self)
+        
         statisticService = StatisticServiceImplementation()
         
         
@@ -127,7 +133,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                     self.correctAnswers = 0
                     self.questionFactory?.requestNextQuestion()
                 }
-            alertPresenter?.showAlert(result: alertModel)
+            alertPresenter?.show(alertModel: alertModel)
         } else {
             currentQuestionIndex += 1
             questionFactory?.requestNextQuestion()
@@ -144,19 +150,20 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     private func showNetworkError(message: String) {
         hideLoadingIndicator()
-        let alertModel = AlertModel(
+        let errorAlert = AlertModel(
             title: "Ошибка",
-            message: message,
-            buttonText: "Попробовать ещё раз",
-            completion: { [weak self]  in
-                guard let self = self else {
-                    return
-                }
-                self.correctAnswers = 0
-                self.currentQuestionIndex = 0
-                self.questionFactory?.requestNextQuestion()
-            })
-        alertPresenter?.showAlert(result: alertModel)
+            message: "Невозможно загрузить данные",
+            buttonText: "Попробовать ещё раз")
+        { [weak self]  in
+            guard let self = self else {
+                return
+            }
+            self.correctAnswers = 0
+            self.currentQuestionIndex = 0
+            self.questionFactory?.requestNextQuestion()
+        }
+        imageView.layer.borderWidth = 0
+        alertPresenter?.show(alertModel: errorAlert)
     }
     
     func didLoadDataFromServer() {
