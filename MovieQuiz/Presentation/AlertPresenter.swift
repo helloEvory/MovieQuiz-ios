@@ -1,17 +1,25 @@
 import UIKit
-final class AlertPresenter {
-    private weak var alertPresenterDelegate: MovieQuizViewController?
-    init(alertPresenterDelegate: MovieQuizViewController) {
-        self.alertPresenterDelegate = alertPresenterDelegate
+
+class AlertPresenter: AlertPresenterProtocol {
+    
+    private weak var delegate: AlertPresenterDelegate?
+    init(delegate: AlertPresenterDelegate) {
+        self.delegate = delegate
     }
     
-    func showAlert (with model: AlertModel) {
-        let alert = UIAlertController(title: model.title, message: model.message, preferredStyle: .alert)
+    func showAlert(model: AlertModel) {
+        let alert = UIAlertController(
+            title: model.title,
+            message: model.message,
+            preferredStyle: .alert)
         
         let action = UIAlertAction(title: model.buttonText, style: .default) { _ in
-            model.completion?()
+            model.completion()
+            
         }
         alert.addAction(action)
-        alertPresenterDelegate?.present(alert, animated: true, completion: nil)
+        
+        delegate?.present(alert, animated: true, completion: nil)
     }
 }
+
