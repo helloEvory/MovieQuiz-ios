@@ -148,7 +148,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
                                message: message,
                                buttonText: "Попробовать ещё раз") { [weak self] in
             guard let self = self else {return}
-            self.questionFactory?.requestNextQuestion()
+            self.questionFactory?.loadData()
         }
         alertPresenter?.showAlert(model: model)
     }

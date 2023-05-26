@@ -53,8 +53,8 @@ final class StatisticServiceImplementation: StatisticService {
                                   total: amount,
                                   date: Date())
         
-        correct = newGame.correct
-        total = newGame.total
+        correct += newGame.correct
+        total += newGame.total
         
         if gamesCount == 0 {
             bestGame = newGame
