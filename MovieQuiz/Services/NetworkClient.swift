@@ -1,13 +1,7 @@
-//
-//  NetworkClient.swift
-//  MovieQuiz
-//
-//  Created by Илия Егирев on 13.03.2023.
-//
-
 import Foundation
-struct NetworkClient {
 
+struct NetworkClient {
+    
     private enum NetworkError: Error {
         case codeError
     }
@@ -22,7 +16,7 @@ struct NetworkClient {
             }
             
             if let response = response as? HTTPURLResponse,
-                response.statusCode < 200 || response.statusCode >= 300 {
+               response.statusCode < 200 || response.statusCode >= 300 {
                 handler(.failure(NetworkError.codeError))
                 return
             }
@@ -30,7 +24,6 @@ struct NetworkClient {
             guard let data = data else { return }
             handler(.success(data))
         }
-        
         task.resume()
     }
 }

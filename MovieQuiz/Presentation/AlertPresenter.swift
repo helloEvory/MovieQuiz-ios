@@ -1,25 +1,25 @@
-//
-//  AlertPresenter.swift
-//  MovieQuiz
-//
-//  Created by Илия Егирев on 11.03.2023.
-//
-
 import UIKit
 
-class AlertPresenter {
-    let alertPresenterDelegate: MovieQuizViewController
+class AlertPresenter: AlertPresenterProtocol {
     
-    func show(alertModel: AlertModel) {
-        let alert = UIAlertController(
-            title: alertModel.title,
-            message: alertModel.message,
-            preferredStyle: .alert)
-        let action = UIAlertAction(title: alertModel.buttonText, style: .default, handler: {_ in alertModel.completion() })
-        alert.addAction(action)
-        alertPresenterDelegate.present (alert, animated: true)
+    private weak var delegate: AlertPresenterDelegate?
+    init(delegate: AlertPresenterDelegate) {
+        self.delegate = delegate
     }
-    init(alertPresenterDelegate: MovieQuizViewController) {
-        self.alertPresenterDelegate = alertPresenterDelegate
+    
+    func showAlert(model: AlertModel) {
+        let alert = UIAlertController(
+            title: model.title,
+            message: model.message,
+            preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: model.buttonText, style: .default) { _ in
+            model.completion()
+            
+        }
+        alert.addAction(action)
+        
+        delegate?.present(alert, animated: true, completion: nil)
     }
 }
+
