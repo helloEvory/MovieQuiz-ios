@@ -1,9 +1,7 @@
 
+@testable import MovieQuiz
 import Foundation
 
-protocol NetworkClientRouting {
-    func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void)
-}
 struct StubNetworkClient: NetworkClientRouting {
     
     enum TestError: Error {
